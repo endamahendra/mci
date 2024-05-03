@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="row g-3" id="productForm" enctype: 'multipart/form-data'>
+                <form class="row g-3" id="productForm" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="id">
                     <div class="col-md-12">

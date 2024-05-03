@@ -6,7 +6,6 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Data Product</h3>
                 <p class="text-subtitle text-muted"></p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
@@ -21,10 +20,9 @@
     </div>
     <section class="section">
         <div class="card">
-            <div class="card-header">
-            </div>
+
             <div class="card-body">
-            <h6 class="card-title">Data Product</h6>
+            <h5 class="card-title">Data Product</h5>
             <div style="margin-bottom: 10px;">
                 <button type="button" class="btn btn-primary" onclick="clearForm(); $('#productFormModal').modal('show');">
                     <i class="bi-plus-circle me-2"></i>Tambah Data
