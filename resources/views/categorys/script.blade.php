@@ -1,4 +1,5 @@
 <script>
+
     //fungsi untuk menampilkan data
     $(document).ready(function() {
         $.ajaxSetup({
@@ -7,33 +8,28 @@
         }
         });
 
-        $('#tableProduct').DataTable({
+        $('#tableCategory').DataTable({
             dom: 'Bfrtip',
             buttons: [ 'copy', 'csv', 'excel', 'pdf', 'print'],
             ajax: {
-                url: '/product/datatables',
+                url: '/category/datatables',
                 type: 'GET',
                 "serverSide": true,
                 "processing": true,
 
             },
             columns: [
-                { data: 'sku' },
+                { data: 'nama_kategori' },
                 { data: 'deskripsi' },
-                { data: 'harga' },
-                { data: 'stok' },
-                    {
-                        data: 'categories',
-                        render: function (data, type, row) {
-                            var categories = data.map(function(category) {
-                                return category.nama_kategori;
-                            });
-                            return categories.join(', '); // Gabungkan nama kategori menjadi satu string
-                        }
-                    },
-
                 {
                     data: 'created_at',
+                    render: function (data, type, row) {
+                        return moment(data).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                },
+
+                {
+                    data: 'update_at',
                     render: function (data, type, row) {
                         return moment(data).format('YYYY-MM-DD HH:mm:ss');
                     }
@@ -41,9 +37,9 @@
                 {
                     data: null,
                     render: function (data, type, row) {
-                        return '<i class="fa-solid fa-pen-to-square" onclick="editProduct(' + row.id + ')"></i> ' +
+                        return '<i class="fa-solid fa-pen-to-square" onclick="editCategory(' + row.id + ')"></i> ' +
                             '<span style="margin-right: 10px;"></span>' +
-                            '<i class="fa-solid fa-trash" onclick="deleteProduct(' + row.id + ')"></i>';
+                            '<i class="fa-solid fa-trash" onclick="deleteCategory(' + row.id + ')"></i>';
                     }
                 }
             ],
@@ -52,19 +48,15 @@
     });
 
     //fungsi untuk menyimpan data yang diinput
-    function saveProduct() {
+    function saveCategory() {
         var id = $('#id').val();
         var method = (id === '') ? 'POST' : 'PUT';
-        var categories = $('#category_id').val();
         var data = {
-            sku: $('#sku').val(),
+            nama_kategori: $('#nama_kategori').val(),
             deskripsi: $('#deskripsi').val(),
-            harga: $('#harga').val(),
-            stok: $('#stok').val(),
-            category_id: categories
         };
         $.ajax({
-            url: '/product' + (method === 'POST' ? '' : '/' + id),
+            url: '/category' + (method === 'POST' ? '' : '/' + id),
             type: method,
             data:data,
             success: function (response) {
@@ -76,8 +68,8 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         clearForm();
-                        $('#tableProduct').DataTable().ajax.reload();
-                        $('#productFormModal').modal('hide');
+                        $('#tableCategory').DataTable().ajax.reload();
+                        $('#categoryFormModal').modal('hide');
                     }
                 });
             },
@@ -93,20 +85,18 @@
     }
 
     //edit data product
-    function editProduct(id) {
+    function editCategory(id) {
     $.ajax({
-        url: '/product/' + id,
+        url: '/category/' + id,
         type: 'GET',
         success: function (response) {
-            $('#id').val(response.product.id);
-            $('#sku').val(response.product.sku);
-            $('#deskripsi').val(response.product.deskripsi);
-            $('#harga').val(response.product.harga);
-            $('#stok').val(response.product.stok);
+            $('#id').val(response.category.id);
+            $('#nama_kategori').val(response.category.nama_kategori);
+            $('#deskripsi').val(response.category.deskripsi);
             // Mengisi formulir dengan data yang akan diedit
-            $('#productFormModalLabel').text('Form Edit Data');
+            $('#categoryFormModalLabel').text('Form Edit Data Pelanggan');
             $('#simpan').text('Simpan Perubahan');
-            $('#productFormModal').modal('show');
+            $('#categoryFormModal').modal('show');
         },
         error: function (error) {
             Swal.fire({
@@ -120,7 +110,7 @@
 }
 
 
-    function deleteProduct(id) {
+    function deleteCategory(id) {
         // Menampilkan modal konfirmasi penghapusan
         Swal.fire({
             title: 'Konfirmasi Hapus Data',
@@ -135,7 +125,7 @@
             if (result.isConfirmed) {
                 // Jika pengguna mengonfirmasi penghapusan
                 $.ajax({
-                    url: '/product/' + id,
+                    url: '/category/' + id,
                     type: 'DELETE',
                     success: function (response) {
                         // Menampilkan notifikasi sukses
@@ -146,7 +136,7 @@
                             confirmButtonText: 'OK'
                         }).then(() => {
                             // Memuat ulang data setelah penghapusan
-                            $('#tableProduct').DataTable().ajax.reload();
+                            $('#tableCategory').DataTable().ajax.reload();
                         });
                     },
                     error: function (xhr, status, error) {
@@ -174,9 +164,7 @@
 
     //fungsi untuk menghapus isi form yang sudah diisi
     function clearForm() {
-    $('#sku').val('');
+    $('#nama_kategori').val('');
     $('#deskripsi').val('');
-    $('#harga').val('');
-    $('#stok').val('');
  }
 </script>

@@ -10,14 +10,14 @@ class product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama_product',
+        'sku',
         'deskripsi',
         'harga',
         'stok',
     ];
 
-    public function purchaseOrders()
+    public function categories()
     {
-        return $this->hasMany(PurchaseOrder::class);
+        return $this->belongsToMany(Category::class, 'category_product');
     }
 }
