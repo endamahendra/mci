@@ -14,6 +14,7 @@ class product extends Model
         'deskripsi',
         'harga',
         'stok',
+        'photo',
     ];
 
     public function categories()

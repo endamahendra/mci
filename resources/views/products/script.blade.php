@@ -52,72 +52,103 @@
     });
 
     //fungsi untuk menyimpan data yang diinput
-    function saveProduct() {
-        var id = $('#id').val();
-        var method = (id === '') ? 'POST' : 'PUT';
-        var categories = $('#category_id').val();
-        var data = {
-            sku: $('#sku').val(),
-            deskripsi: $('#deskripsi').val(),
-            harga: $('#harga').val(),
-            stok: $('#stok').val(),
-            category_id: categories
-        };
-        $.ajax({
-            url: '/product' + (method === 'POST' ? '' : '/' + id),
-            type: method,
-            data:data,
-            success: function (response) {
-                Swal.fire({
-                    title: 'Sukses',
-                    text: 'Data berhasil disimpan',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        clearForm();
-                        $('#tableProduct').DataTable().ajax.reload();
-                        $('#productFormModal').modal('hide');
-                    }
-                });
-            },
-            error: function (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Gagal menyimpan data. Periksa kembali input Anda.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
+function saveProduct() {
+    var id = $('#id').val();
+    var method = (id === '') ? 'POST' : 'POST';
+    var categories = $('#category_id').val();
+
+    var formData = new FormData();
+    formData.append('id', $('#id').val());
+    formData.append('sku', $('#sku').val());
+    formData.append('deskripsi', $('#deskripsi').val());
+    formData.append('harga', $('#harga').val());
+    formData.append('stok', $('#stok').val());
+
+    // Hanya menambahkan file foto ke FormData jika ada file yang dipilih
+    var photoFile = $('#photo')[0].files[0];
+    if (photoFile) {
+        formData.append('photo', photoFile);
     }
 
+    categories.forEach(function(category) {
+        formData.append('category_id[]', category);
+    });
+
+    $.ajax({
+        url: '/product' + (id === '' ? '' : '/' + id),
+        type: method,
+        data: formData,
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (response) {
+            Swal.fire({
+                title: 'Sukses',
+                text: 'Data berhasil disimpan',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    clearForm();
+                    $('#tableProduct').DataTable().ajax.reload();
+                    $('#productFormModal').modal('hide');
+                }
+            });
+        },
+        error: function (error) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Gagal menyimpan data. Periksa kembali input Anda.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+}
+
+
     //edit data product
-    function editProduct(id) {
+function editProduct(id) {
     $.ajax({
         url: '/product/' + id,
         type: 'GET',
         success: function (response) {
+            // Set nilai-nlai produk ke dalam elemen-elemen formulir
             $('#id').val(response.product.id);
             $('#sku').val(response.product.sku);
             $('#deskripsi').val(response.product.deskripsi);
             $('#harga').val(response.product.harga);
             $('#stok').val(response.product.stok);
-            // Mengisi formulir dengan data yang akan diedit
+
+            // Set nilai category_id (jika diperlukan)
+            var categoryIds = response.product.category_id;
+            $('#category_id').val(categoryIds);
+            $('#category_id').trigger('change');
+
+            // Set foto jika ada
+            if (response.product.photo) {
+                $('#photo').attr('src', '/photos/' + response.product.photo); // Atur atribut src untuk menampilkan gambar
+            } else {
+                $('#photo').removeAttr('src'); // Hapus gambar jika tidak ada
+            }
+
+            // Tampilkan modal
             $('#productFormModalLabel').text('Form Edit Data');
-            $('#simpan').text('Simpan Perubahan');
+            $('#simpanProduct').text('Simpan Perubahan');
             $('#productFormModal').modal('show');
         },
         error: function (error) {
             Swal.fire({
-                    title: 'Error',
-                    text: 'Gagal mengambil data Product.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
+                title: 'Error',
+                text: 'Gagal mengambil data Product.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
     });
 }
+
 
 
     function deleteProduct(id) {
@@ -174,9 +205,13 @@
 
     //fungsi untuk menghapus isi form yang sudah diisi
     function clearForm() {
+    $('#id').val('');
     $('#sku').val('');
     $('#deskripsi').val('');
     $('#harga').val('');
     $('#stok').val('');
+    $('#category_id').val('');
+    $('#photo').val('');
  }
 </script>
+
