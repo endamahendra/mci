@@ -22,7 +22,7 @@
                             @foreach($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->nama_pemasok }}</option>
                             @endforeach
-                        </select>
+                        </select> 
                     </div>
                     <div class="col-md-12">
                         <select id="product_id" class="form-control">
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-md-6"> 
+                    <div class="col-md-6">
                         <label for="detail_supplier" class="form-label">Supplier</label>
                         <input type="text" id="detail_supplier" class="form-control" readonly>
                     </div>

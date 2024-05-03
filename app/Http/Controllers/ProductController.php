@@ -4,73 +4,86 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\product;
+use App\Models\Category;
+use App\Models\CategoryProduct;
 use Validator;
 use DataTables;
 
 class ProductController extends Controller
 {
     public function index(){
-        return view('products.index');
+        $categorys = Category::all();
+                return view('products.index', compact('categorys'));
     }
 
-    public function getdata(){
-        $products = Product::all();
-        return DataTables::of($products)->addColumn('action', function($products){
-                return '<button class="btn btn-sm btn-warning" onclick="editProduct(' . $products->ID_Product . ')">Edit</button>' .
-                        '<button class="btn btn-sm btn-danger" onclick="deleteProduct(' . $products->ID_Product . ')">Delete</button>';
+    public function getdata()
+    {
+        $products = Product::with('categories')->get();
+        return DataTables::of($products)
+            ->addColumn('action', function ($product) {
+                return '<button class="btn btn-sm btn-warning" onclick="editProduct(' . $product->id . ')">Edit</button>' .
+                    '<button class="btn btn-sm btn-danger" onclick="deleteProduct(' . $product->id . ')">Delete</button>';
             })
             ->make(true);
     }
 
-        public function store(Request $request)
-        {
-            $validator = Validator::make($request->all(), [
-                'nama_product' => 'required|unique:products',
-                'deskripsi' => 'required',
-                'harga' => 'required',
-                'stok' => 'required',
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
-            }
-    
-            $product = Product::create([
-                'nama_product' => $request->input('nama_product'),
-                'deskripsi' => $request->input('deskripsi'),
-                'harga' => $request->input('harga'),
-                'stok' => $request->input('stok'),
-            ]);
-    
-            return response()->json(['product' => $product]);
-        }
+public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'sku' => 'required|unique:products',
+        'deskripsi' => 'required',
+        'harga' => 'required',
+        'stok' => 'required',
+        'category_id' => 'required|array', // Ubah validasi untuk menerima array
+    ]);
 
-        public function update(Request $request, $id)
-        {
-            $validator = Validator::make($request->all(), [
-                'nama_product' => 'required|unique:products,nama_product,'.$id,
-                'deskripsi' => 'required',
-                'harga' => 'required',
-                'stok' => 'required',
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
-            }
-    
-            $product = Product::find($id);
-            if (!$product) {
-                return response()->json(['error' => 'Data not found'], 404);
-            }
-    
-            $product->nama_product = $request->input('nama_product');
-            $product->deskripsi = $request->input('deskripsi');
-            $product->harga = $request->input('harga');
-            $product->stok = $request->input('stok');
-            $product->save();
-    
-            return response()->json(['product' => $product]);
-        }
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 400);
+    }
+
+    $product = Product::create([
+        'sku' => $request->input('sku'),
+        'deskripsi' => $request->input('deskripsi'),
+        'harga' => $request->input('harga'),
+        'stok' => $request->input('stok'),
+    ]);
+
+    // Simpan relasi produk dan kategori
+    $product->categories()->attach($request->input('category_id'));
+
+    return response()->json(['product' => $product]);
+}
+
+public function update(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'sku' => 'required|unique:products,sku,'.$id,
+        'deskripsi' => 'required',
+        'harga' => 'required',
+        'stok' => 'required',
+        'category_id' => 'required|array', // Ubah validasi untuk menerima array
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 400);
+    }
+
+    $product = Product::find($id);
+    if (!$product) {
+        return response()->json(['error' => 'Data not found'], 404);
+    }
+
+    $product->sku = $request->input('sku');
+    $product->deskripsi = $request->input('deskripsi');
+    $product->harga = $request->input('harga');
+    $product->stok = $request->input('stok');
+    $product->save();
+
+    // Sinkronisasi relasi produk dan kategori
+    $product->categories()->sync($request->input('category_id'));
+
+    return response()->json(['product' => $product]);
+}
 
 
         public function show($id)
@@ -88,5 +101,5 @@ class ProductController extends Controller
             Product::destroy($id);
             return response()->json([], 204);
         }
-    
+
 }

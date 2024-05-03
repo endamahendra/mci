@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
 use App\Models\Supplier;
 use App\Models\Product;
-use Validator;
+use Validator; 
 use DataTables;
 class PurchaseOrderController extends Controller
 {
     public function index()
     {
         $suppliers = Supplier::all();
-        $products = Product::all(); 
-        
+        $products = Product::all();
+
         return view('purchase_orders.index', compact('suppliers', 'products'));
     }
 

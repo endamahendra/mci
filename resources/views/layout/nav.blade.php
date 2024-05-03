@@ -19,15 +19,20 @@
             </a>
           </li>
           <li>
+            <a href="/category">
+              <i class="bi bi-circle"></i><span>Kategori</span>
+            </a>
+          </li>
+          <li>
             <a href="/customer">
               <i class="bi bi-circle"></i><span>Pelanggan</span>
             </a>
           </li>
-          <li>
+          {{-- <li>
             <a href="/supplier">
               <i class="bi bi-circle"></i><span>Supplier</span>
             </a>
-          </li>
+          </li> --}}
     </ul>
     <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#transaksi" data-bs-toggle="collapse" href="#">
@@ -54,5 +59,5 @@
         </a>
     </li>
 
-    
+
 </aside>

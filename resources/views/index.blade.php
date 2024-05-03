@@ -96,7 +96,7 @@
                                     <h2 class="text-xl font-semibold text-black dark:text-white">Selamat Datang</h2>
 
                                     <p class="mt-4 text-sm/relaxed">
-                                    "Jangan sampai Anda menikmati kesuksesan. Karena kesuksesan adalah awal dari kesuksesan.
+                                    Jangan sampai Anda menikmati kesuksesan. Karena kesuksesan adalah awal dari kesuksesan.
                                     </p>
                                 </div>
                             </a>
