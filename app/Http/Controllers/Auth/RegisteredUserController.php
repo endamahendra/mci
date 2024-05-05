@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisteredUserController extends Controller
 {
@@ -39,12 +41,18 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user',
         ]);
 
+        // Buat token JWT
+        $token = JWTAuth::fromUser($user);
+        $user->api_token = $token;
+        $user->save();
         event(new Registered($user));
 
         Auth::login($user);
 
+        // Redirect dengan token
         return redirect(route('dashboard', absolute: false));
     }
 }

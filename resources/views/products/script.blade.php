@@ -20,7 +20,13 @@
             columns: [
                 { data: 'sku' },
                 { data: 'deskripsi' },
-                { data: 'harga' },
+                {
+                    data: 'harga',
+                    render: function(data, type, row) {
+                        // Ubah angka menjadi format rupiah
+                        return formatRupiah(data, 'Rp ');
+                    }
+                },
                 { data: 'stok' },
                     {
                         data: 'categories',
@@ -30,7 +36,14 @@
                             });
                             return categories.join(', '); // Gabungkan nama kategori menjadi satu string
                         }
-                    },
+                    }, 
+
+                                {
+                                    "data": "photo",
+                                    "render": function(data, type, row, meta) {
+                                        return '<img src="{{asset('photos')}}/' + data + '" alt="Product Image" style="width: 100px; height: auto;" />';
+                                    }
+                                },
 
                 {
                     data: 'created_at',

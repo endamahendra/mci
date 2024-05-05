@@ -40,15 +40,7 @@
         </div>
 
         <!-- Role -->
-        <div class="mb-4">
-            <x-input-label for="role" :value="__('Role')" class="block mt-4" />
-            <select id="role" name="role" class="block mt-1 w-full dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded p-2">
-                <option value="admin">Admin</option>
-                <option value="customer">Customer</option>
-                <option value="supplier">Supplier</option>
-            </select>
-        </div>
-
+        <input type="hidden" id="role" name="role" value="user">
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
                 {{ __('Already registered?') }}

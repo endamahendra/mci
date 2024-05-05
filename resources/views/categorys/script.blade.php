@@ -27,13 +27,6 @@
                         return moment(data).format('YYYY-MM-DD HH:mm:ss');
                     }
                 },
-
-                {
-                    data: 'update_at',
-                    render: function (data, type, row) {
-                        return moment(data).format('YYYY-MM-DD HH:mm:ss');
-                    }
-                },
                 {
                     data: null,
                     render: function (data, type, row) {

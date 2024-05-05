@@ -6,7 +6,7 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Data Pengguna</h3>
+                <h3>Data Admin</h3>
                 <p class="text-subtitle text-muted"></p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
@@ -21,10 +21,8 @@
     </div>
     <section class="section">
         <div class="card">
-            <div class="card-header">
-            </div>
             <div class="card-body">
-            <h6 class="card-title">Data Pengguna</h6>
+            <h6 class="card-title">Data Admin</h6>
             <div style="margin-bottom: 10px;">
                 <button type="button" class="btn btn-primary" onclick="clearForm(); $('#userFormModal').modal('show');">
                     <i class="bi-plus-circle me-2"></i>Tambah Data
@@ -33,16 +31,15 @@
                 <table class="table table-striped" id="tableUser">
                     <thead>
                         <tr>
-                            <th>Nama Pengguna</th>
+                            <th>Nama Admin</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
+                            <th>Dibuat pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                    
+
                     </tbody>
                 </table>
             </div>
