@@ -10,7 +10,7 @@ use Validator;
 use DataTables;
 use Illuminate\Support\Facades\Log;
 
-
+ 
 class ProductController extends Controller
 {
     public function index(){

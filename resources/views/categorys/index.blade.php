@@ -21,8 +21,6 @@
     </div>
     <section class="section">
         <div class="card">
-            <div class="card-header">
-            </div>
             <div class="card-body">
             <h6 class="card-title">Data Kategori</h6>
             <div style="margin-bottom: 10px;">
@@ -35,8 +33,7 @@
                         <tr>
                             <th>Nama Kategori</th>
                             <th>Deskripsi</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
+                            <th>Dibuat pada</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>

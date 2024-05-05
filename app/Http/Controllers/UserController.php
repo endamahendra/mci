@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
 use DataTables;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -14,7 +15,7 @@ class UserController extends Controller
     }
 
     public function getdata(){
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
         return DataTables::of($users)->addColumn('action', function($user){
                 return '<button class="btn btn-sm btn-warning" onclick="editUser(' . $user->id . ')">Edit</button>' .
                         '<button class="btn btn-sm btn-danger" onclick="deleteUser(' . $user->id . ')">Delete</button>';
@@ -28,7 +29,6 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'role' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -39,7 +39,7 @@ class UserController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
-            'role' => $request->input('role'),
+            'role' => 'admin',
         ]);
 
         return response()->json(['user' => $user]);
@@ -51,7 +51,6 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
             'password' => 'nullable|min:6',
-            'role' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -68,7 +67,7 @@ class UserController extends Controller
         if ($request->has('password')) {
             $user->password = bcrypt($request->input('password'));
         }
-        $user->role = $request->input('role');
+        $user->role = 'admin';
         $user->save();
 
         return response()->json(['user' => $user]);
@@ -85,9 +84,21 @@ class UserController extends Controller
         return response()->json(['user' => $user]);
     }
 
-    public function destroy($id)
-    {
-        User::destroy($id);
-        return response()->json([], 204);
+public function destroy($id): JsonResponse
+{
+    try {
+        // Periksa apakah ID pengguna bukan 1
+        if ($id != 1) {
+            // Hapus pengguna dengan ID yang diberikan
+            User::destroy($id);
+            return response()->json([], 204);
+        } else {
+            // Jika ID pengguna adalah 1, kirim respons dengan pesan error
+            return response()->json(['message' => 'Cannot delete user with ID 1'], 403);
+        }
+    } catch (\Exception $e) {
+        // Tangani kesalahan jika terjadi
+        return response()->json(['message' => 'Gagal menghapus data pengguna.'], 500);
     }
+}
 }

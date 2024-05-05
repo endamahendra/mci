@@ -5,7 +5,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="userFormModalLabel">Form Tambah Pengguna</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div> 
+            </div>
             <div class="modal-body">
                 <form class="row g-3" id="userForm">
                     @csrf
@@ -18,13 +18,6 @@
                     </div>
                     <div class="col-md-12">
                         <input type="password" id="password" class="form-control" placeholder="Password">
-                    </div>
-                    <div class="col-md-12">
-                        <select id="role" class="form-select">
-                            <option value="admin">Admin</option>
-                            <option value="customer">Customer</option>
-                            <option value="supplier">Supplier</option>
-                        </select>
                     </div>
                 </form>
             </div>

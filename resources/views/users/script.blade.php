@@ -10,7 +10,7 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         ajax: {
-            url: '/user/datatables',
+            url: '/admin/datatables',
             type: 'GET',
             "serverSide": true,
             "processing": true,
@@ -19,19 +19,13 @@ $(document).ready(function() {
             { data: 'name' },
             { data: 'email' },
             { data: 'role' },
-            { 
+            {
                 data: 'created_at',
                 render: function (data, type, row) {
                     return moment(data).format('YYYY-MM-DD HH:mm:ss');
                 }
             },
-            { 
-                data: 'updated_at',
-                render: function (data, type, row) {
-                    return moment(data).format('YYYY-MM-DD HH:mm:ss');
-                }
-            },
-            { 
+            {
                 data: null,
                 render: function (data, type, row) {
                     return '<i class="fa-solid fa-pen-to-square" onclick="editUser(' + row.id + ')"></i> ' +
@@ -55,7 +49,7 @@ function saveUser() {
         role: $('#role').val(),
     };
     $.ajax({
-        url: '/user' + (method === 'POST' ? '' : '/' + id),
+        url: '/admin' + (method === 'POST' ? '' : '/' + id),
         type: method,
         data: data,
         success: function (response) {
@@ -86,7 +80,7 @@ function saveUser() {
 //edit data pengguna
 function editUser(id) {
     $.ajax({
-        url: '/user/' + id,
+        url: '/admin/' + id,
         type: 'GET',
         success: function (response) {
             $('#id').val(response.user.id);
@@ -125,7 +119,7 @@ function deleteUser(id) {
         if (result.isConfirmed) {
             // Jika pengguna mengonfirmasi penghapusan
             $.ajax({
-                url: '/user/' + id,
+                url: '/admin/' + id,
                 type: 'DELETE',
                 success: function (response) {
                     // Menampilkan notifikasi sukses
@@ -140,11 +134,10 @@ function deleteUser(id) {
                     });
                 },
                 error: function (xhr, status, error) {
-                    // Menampilkan notifikasi kesalahan
-                    if (xhr.status == 404) {
+                    if (xhr.status == 403) {
                         Swal.fire({
                             title: 'Peringatan',
-                            text: 'Data pengguna dengan ID tersebut tidak ditemukan.',
+                            text: 'Data Admin dengan ID 1 tidak bisa dihapus.',
                             icon: 'warning',
                             confirmButtonText: 'OK'
                         });
